@@ -1,16 +1,15 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
-import '../css/LoginForm.css'; // make sure to create this file
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { setAuthTokens, setIsAuthenticated } = useContext(AuthContext);
+  const { setTokens } = useContext(AuthContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    console.log('email', email);
     const response = await fetch(
       'https://api-x0xg.onrender.com/api/auth/login',
       {
@@ -25,43 +24,45 @@ function LoginForm() {
     const data = await response.json();
 
     if (response.ok) {
-      setAuthTokens(data.tokens);
-      setIsAuthenticated(true);
+      setTokens(data.authToken);
+      console.log('Login success:', data.authtoken);
     } else {
       // handle error, e.g. show a message to the user
     }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 animate">
-      <form onSubmit={handleSubmit} className="form-inline">
-        <div className="form-group mb-2">
-          <label htmlFor="email" className="sr-only">
-            Email
+    <div className="container d-flex flex-column justify-content-center align-items-center vh-100 bg-dark text-light">
+      <form onSubmit={handleSubmit} className="bg-secondary p-4 rounded">
+        <div className="mb-3 row">
+          <label htmlFor="emailInput" className="col-sm-2 col-form-label">
+            Email:
           </label>
-          <input
-            id="email"
-            type="email"
-            className="form-control"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-          />
+          <div className="col-sm-10">
+            <input
+              id="emailInput"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-control"
+            />
+          </div>
         </div>
-        <div className="form-group mx-sm-3 mb-2">
-          <label htmlFor="password" className="sr-only">
-            Password
+        <div className="mb-3 row">
+          <label htmlFor="passwordInput" className="col-sm-2 col-form-label">
+            Password:
           </label>
-          <input
-            id="password"
-            type="password"
-            className="form-control"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-          />
+          <div className="col-sm-10">
+            <input
+              id="passwordInput"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-control"
+            />
+          </div>
         </div>
-        <button type="submit" className="btn btn-primary mb-2">
+        <button type="submit" className="btn btn-light">
           Log in
         </button>
       </form>

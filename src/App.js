@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import LoginPage from './routes/LoginPage';
 import HomePage from './routes/HomePage';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const AppContent = () => {
   const { isAuthenticated } = useAuth();
@@ -12,11 +13,11 @@ const AppContent = () => {
   return (
     <Router>
       <Routes>
-      {!isAuthenticated ? (
-        <Route path="/" element={<LoginPage />} />
-      ) : (
-        <Route path="/" element={<HomePage />} />
-      )}
+        {!isAuthenticated ? (
+          <Route path="/" element={<LoginPage />} />
+        ) : (
+          <Route path="/" element={<HomePage />} />
+        )}
       </Routes>
     </Router>
   );

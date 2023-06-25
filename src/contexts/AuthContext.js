@@ -1,35 +1,47 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 // Create the context
 export const AuthContext = createContext();
 
-// Create a provider that holds the state and function to change the state
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const storedTokens = localStorage.getItem('authTokens');
+  const [authTokens, setAuthTokens] = useState(() => {
+    try {
+      return storedTokens ? JSON.parse(storedTokens) : null;
+    } catch (error) {
+      console.error('Error parsing authTokens:', error);
+      return null;
+    }
+  });
 
-  // Check the user's authentication status and return a boolean
-  const checkAuthentication = () => {
-    const tokens = localStorage.getItem('authTokens');
-    return tokens ? true : false;
-  };
-
-  const setAuthTokens = (tokens) => {
-    localStorage.setItem('authTokens', JSON.stringify(tokens));
-    setIsAuthenticated(true);
+  const setTokens = (data) => {
+    localStorage.setItem('authTokens', JSON.stringify(data));
+    setAuthTokens(data);
   };
 
   const logout = () => {
     localStorage.removeItem('authTokens');
-    setIsAuthenticated(false);
+    setAuthTokens(null);
   };
 
+  const isAuthenticated = authTokens !== null;
+  console.log('authTokens:', authTokens);
+  console.log('isAuthenticated:', isAuthenticated);
+
   useEffect(() => {
-    setIsAuthenticated(checkAuthentication());
+    try {
+      const storedTokens = localStorage.getItem('authTokens');
+      if (storedTokens) {
+        setAuthTokens(JSON.parse(storedTokens));
+      }
+    } catch (error) {
+      console.error('Error parsing authTokens:', error);
+    }
   }, []);
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, setIsAuthenticated, setAuthTokens, logout }}
+      value={{ authTokens, setTokens, logout, isAuthenticated }}
     >
       {children}
     </AuthContext.Provider>
