@@ -32,7 +32,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="container d-flex flex-column justify-content-center align-items-center vh-100 bg-dark text-light">
+    <div className="container d-flex flex-column justify-content-center align-items-center bg-dark text-light">
       <form onSubmit={handleSubmit} className="bg-secondary p-4 rounded">
         <div className="mb-3 row">
           <label htmlFor="emailInput" className="col-sm-2 col-form-label">
