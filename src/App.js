@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import LoginPage from './routes/LoginPage';
 import HomePage from './routes/HomePage';
+import { ZoomTransitionWrapper } from './tools/ZoomTransitionWrapper';
+import SlideTransitionWrapper from './tools/SlideTransitionWrapper';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -14,9 +16,23 @@ const AppContent = () => {
     <Router>
       <Routes>
         {!isAuthenticated ? (
-          <Route path="/" element={<LoginPage />} />
+          <Route
+            path="/"
+            element={
+              <SlideTransitionWrapper key="login">
+                <LoginPage />
+              </SlideTransitionWrapper>
+            }
+          />
         ) : (
-          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/"
+            element={
+              <ZoomTransitionWrapper key="home">
+                <HomePage />
+              </ZoomTransitionWrapper>
+            }
+          />
         )}
       </Routes>
     </Router>

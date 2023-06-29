@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import AnimatedButton from '../tools/AnimatedButton';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -62,9 +63,11 @@ function LoginForm() {
             />
           </div>
         </div>
-        <button type="submit" className="btn btn-light">
-          Log in
-        </button>
+         <AnimatedButton> 
+          <button type="submit" className="btn btn-light">
+            Log in
+          </button>
+         </AnimatedButton> 
       </form>
     </div>
   );
