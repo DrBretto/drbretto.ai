@@ -7,7 +7,7 @@ function RegistrationForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const response = await fetch(
-      'https://api-x0xg.onrender.com/api/auth/register',  // Update this URL
+      'https://api-x0xg.onrender.com/api/user/',  // Update this URL
       {
         method: 'POST',
         headers: {
