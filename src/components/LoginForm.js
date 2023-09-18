@@ -12,7 +12,7 @@ function LoginForm() {
     event.preventDefault();
     console.log('email', email);
     const response = await fetch(
-      'https://api-x0xg.onrender.com/api/auth/login',
+      'https://ohio-postgres.render.com/drbretto_ai_16q2/api/auth/login',
       {
         method: 'POST',
         headers: {
@@ -63,11 +63,11 @@ function LoginForm() {
             />
           </div>
         </div>
-         <AnimatedButton> 
+        <AnimatedButton>
           <button type="submit" className="btn btn-light">
             Log in
           </button>
-         </AnimatedButton> 
+        </AnimatedButton>
       </form>
     </div>
   );

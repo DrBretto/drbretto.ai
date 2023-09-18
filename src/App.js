@@ -1,10 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { BrainSpinalCordProvider } from './contexts/BrainSpinalCordContext';
 import LoginPage from './routes/LoginPage';
 import HomePage from './routes/HomePage';
 import { ZoomTransitionWrapper } from './tools/ZoomTransitionWrapper';
-import SlideTransitionWrapper from './tools/SlideTransitionWrapper';
+//import SlideTransitionWrapper from './tools/SlideTransitionWrapper';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -19,9 +20,9 @@ const AppContent = () => {
           <Route
             path="/"
             element={
-              <SlideTransitionWrapper key="login">
+              <ZoomTransitionWrapper key="login">
                 <LoginPage />
-              </SlideTransitionWrapper>
+              </ZoomTransitionWrapper>
             }
           />
         ) : (
@@ -41,7 +42,9 @@ const AppContent = () => {
 
 const App = () => (
   <AuthProvider>
-    <AppContent />
+    <BrainSpinalCordProvider>
+      <AppContent />
+    </BrainSpinalCordProvider>
   </AuthProvider>
 );
 

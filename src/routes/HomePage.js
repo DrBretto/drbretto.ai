@@ -1,37 +1,15 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from "framer-motion";
+import React from 'react';
 import LogoutButton from '../components/LogoutButton';
-
-function AnimatedList({ items }) {
-  return (
-    <AnimatePresence>
-      {items.map(item => (
-        <motion.div
-          key={item.id}
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          {item.text}
-        </motion.div>
-      ))}
-    </AnimatePresence>
-  );
-}
+import '../css/HomePage.css';
+import DraggableWidget from '../components/DraggableWidget';
+import Recomndr from '../apps/Recomndr';
+import MotherBrainOutput from '../components/MotherBrainOutput';
+import Chromostereopsis from '../apps/Chromostereopsis';
 
 const HomePage = () => {
-  const [items, setItems] = useState([]);
-  
-  const addItem = () => {
-    setItems([...items, { id: Math.random().toString(), text: `Item ${items.length + 1}` }]);
-  };
-
   return (
-    <div>
-      <h1>Welcome to the Home Page!</h1>
-      <button onClick={addItem}>Add item</button>
-      <AnimatedList items={items} />
+    <div className="homepage-background d-flex justify-content-center align-items-center">
+      <Chromostereopsis />
       <LogoutButton />
     </div>
   );

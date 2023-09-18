@@ -1,0 +1,9 @@
+.homepage-background {
+  background-image: url('../images//fireskull.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-position: 'bottom';
+  height: 100vh; /* This ensures the div takes up the full viewport height */
+  width: 100vw; /* This ensures the div takes up the full viewport width */
+}
