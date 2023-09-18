@@ -9,7 +9,7 @@ import Chromostereopsis from '../apps/Chromostereopsis';
 const HomePage = () => {
   return (
     <div className="homepage-background d-flex justify-content-center align-items-center">
-      <Chromostereopsis />
+      {/* <Chromostereopsis /> */}
       <LogoutButton />
     </div>
   );
