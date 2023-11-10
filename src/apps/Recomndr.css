@@ -1,0 +1,84 @@
+/* General Background */
+.homepage-background,
+.applet-container {
+  background-color: #121212; /* Dark background */
+  color: #f8f9fa; /* Light text */
+}
+
+/* Padding at the top of the main content area */
+.applet-container {
+  padding-top: 20px; /* Adjust the value as needed */
+}
+
+/* Navbar */
+.navbar {
+  width: 100%;
+}
+
+/* Footer */
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  background-color: #212529; /* Dark background for footer */
+  color: #f8f9fa; /* Light text for footer */
+}
+
+/* News Widget Specific Styles */
+.card.news-widget {
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.news-widget-body {
+  flex-grow: 1;
+  overflow-y: hidden;
+  background-color: #343a40; /* Dark background for widget body */
+  color: #f8f9fa; /* Light text for widget body */
+}
+
+.summary-scrollable {
+  height: 200px; /* Adjust height as needed */
+  overflow-y: auto;
+  background-color: #333; /* Slightly darker background for text area */
+  padding: 10px; /* Add some padding inside the border */
+  margin: 10px 0; /* Optional: Adds margin around the summary */
+  border: 1px solid #444; /* Subtle border */
+}
+
+/* Custom scrollbar styling */
+.summary-scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.summary-scrollable::-webkit-scrollbar-track {
+  background: #333; /* Scrollbar track color */
+}
+
+.summary-scrollable::-webkit-scrollbar-thumb {
+  background: #444; /* Scrollbar handle color */
+  border-radius: 4px;
+}
+
+.summary-scrollable::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Scrollbar handle color on hover */
+}
+
+.sentiment-summary {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  height: 100%; /* Take up the full height of the column */
+}
+
+/* NewsWidget.css */
+.gauge-container {
+  padding-top: 10px; /* Or any value that looks good to you */
+  display: flex;
+  justify-content: center; /* This will center the gauge horizontally */
+  align-items: center; /* This will center the gauge vertically if needed */
+  flex-direction: column; /* Stack children vertically */
+}

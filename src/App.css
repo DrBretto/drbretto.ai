@@ -1,3 +1,4 @@
+/* App.css */
 body {
   margin: 0;
   padding: 0;
@@ -7,22 +8,14 @@ body {
   background-color: #333;
 }
 
-.div {
-  background-color: #444;
+/* Basic Reset for Padding and Margin */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-.container {
-  background-color: #444;
-  border: 1px solid #555;
-  border-radius: 5px;
-  padding: 20px;
-}
-
-#root,
-.App {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* Styles for Full Page Height */
+html, body, #root {
+  height: 100%;
 }
