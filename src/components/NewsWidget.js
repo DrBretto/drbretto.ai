@@ -6,26 +6,6 @@ const NewsWidget = ({ source, subject }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   const mockData = {
-  //     sentimentScores: {
-  //       low: -0.5,
-  //       high: 0.7,
-  //       average: 0.4,
-  //     },
-  //     summary:
-  //       subject === 'gold'
-  //         ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
-  //         : 'Short lorem ipsum dolor sit amet, consectetur.',
-  //   };
-  //   setLoading(true);
-  //   // Simulate API call delay
-  //   setTimeout(() => {
-  //     setData(mockData);
-  //     setLoading(false);
-  //   }, 1000);
-  // }, [source, subject]);
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -50,7 +30,13 @@ const NewsWidget = ({ source, subject }) => {
     };
 
     fetchData();
-  }, [source, subject]);
+
+    // Set an interval to refresh the data every 15 minutes
+    const interval = setInterval(fetchData, 15 * 60 * 1000); // 15 minutes in milliseconds
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(interval);
+  }, [source, subject]); // Dependencies array
 
   return (
     <Card bg="dark" text="white" className="mb-3 news-widget">
