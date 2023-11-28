@@ -32,7 +32,7 @@ const NewsWidget = ({ source, subject }) => {
     fetchData();
 
     // Set an interval to refresh the data every 15 minutes
-    const interval = setInterval(fetchData, 15 * 60 * 1000); // 15 minutes in milliseconds
+    const interval = setInterval(fetchData, 60 * 1000); // 15 minutes in milliseconds
 
     // Clear the interval when the component unmounts
     return () => clearInterval(interval);
@@ -45,7 +45,7 @@ const NewsWidget = ({ source, subject }) => {
       </Card.Header>
       <Card.Body className="news-widget-body">
         <Row>
-          <Col sm={10} className="summary-scrollable">
+          <Col sm={8} className="summary-scrollable">
             {loading ? (
               <Spinner animation="border" variant="light" />
             ) : (
@@ -55,7 +55,7 @@ const NewsWidget = ({ source, subject }) => {
               </div>
             )}
           </Col>
-          <Col sm={2}>
+          <Col sm={4}>
             {loading ? (
               <Spinner animation="border" variant="light" />
             ) : data && data.sentimentScores ? (
@@ -66,18 +66,6 @@ const NewsWidget = ({ source, subject }) => {
               />
             ) : (
               <div>No data available</div>
-            )}
-
-            {data && data.sentimentScores && (
-              <div className="sentiment-summary">
-                {parseFloat(data.sentimentScores.average) >= 0
-                  ? `${(parseFloat(data.sentimentScores.average) * 100).toFixed(
-                      0
-                    )}% Positive`
-                  : `${Math.abs(
-                      parseFloat(data.sentimentScores.average) * 100
-                    ).toFixed(0)}% Negative`}
-              </div>
             )}
           </Col>
         </Row>

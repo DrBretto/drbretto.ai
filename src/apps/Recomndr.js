@@ -15,33 +15,21 @@ const Recomndr = () => {
             {/* Example usage of NewsWidget */}
             <NewsWidget source="TradingView" subject="gold" />
             <NewsWidget source="TradingView" subject="dollar" />
-            There are the widgets to focus on at first. This may take a minute
-            to load, but it is pulling the data in realtime for you.
-            <br />
-            <br />
-            -Searches TradingView for "Gold" and "US Dollar" respectively,
-            compiles a list of article URLs
-            <br />
-            -Scrapes the articles for text and summarizes a sentiment analysis
-            via a series of GPT API calls
-            <br />
-            -This populates the gauge to display the scores. The needle points
-            to the avg, the width of the bar is uncertainty
-            <br />
-            -This will refresh any time you refresh, and saves the results for
-            the algorithm to learn on, but this will <br />
-            cost like 1-2 cents in API calls each time so try not to spam it :P
-            <br />
-            <br />
-            We can add more news sources
+            <p>These will now update automatically, you don't need to refresh or anything.
+            Instead of constantly processign the same articles over and over again, they now 
+            look for new articles on tradingview once per minute, and will only process new ones.
+            This will save you time (as it's just pulling the latest valid data) and save a ton on
+            GPT processing costs .</p>
+            <p>This will be set up so that you can leave a tab open and it will just update automatically.</p>
+            <p>I am still optimizing the routes and working on the notification part</p>
+            
           </Col>
           <Col sm={5} className="scrollable-column">
           <StockChart />
-
-          This chart is a fake placeholder for not, but I will have all the analysis in this column for at a glance predictions<br/>
-          <br />
-          The algorithm architecture is complete but the alrgorithms will need time to train and tweak. 
-          I will add these changes as we go along. They will not need to preempt "Dave" work or any other.
+          <p>This chart is still being developed, but is currently showing the last 24 hours of
+          JDST and NUGT and normalizes them to illustrtate the relative movement.  
+          The chart is updated every minute, and the data is pulled from the database, which still appears 
+          to be yesterday's data (is the AlphaVantage account premium? it's a day behind with the free account).</p>
           </Col>
         </Row>
       </Container>
