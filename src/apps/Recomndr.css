@@ -3,12 +3,14 @@
 .applet-container {
   background-color: #121212; /* Dark background */
   color: #f8f9fa; /* Light text */
+  width: 100%; /* Add this line to ensure full width */
 }
 
 /* Padding at the top of the main content area */
 .applet-container {
   padding-top: 20px; /* Adjust the value as needed */
 }
+
 
 /* Navbar */
 .navbar {
@@ -28,7 +30,7 @@
 
 /* News Widget Specific Styles */
 .card.news-widget {
-  height: 280px;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }

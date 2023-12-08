@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Spinner } from 'react-bootstrap';
+import { Card, Row, Spinner } from 'react-bootstrap';
 import ThermometerGauge from './ThermometerGauge';
 
 const NewsWidget = ({ source, subject }) => {
@@ -44,31 +44,29 @@ const NewsWidget = ({ source, subject }) => {
         Source: {source} Subject: {subject}
       </Card.Header>
       <Card.Body className="news-widget-body">
-        <Row>
-          <Col sm={8} className="summary-scrollable">
-            {loading ? (
-              <Spinner animation="border" variant="light" />
-            ) : (
-              // Display summary text with scroll
+        {loading ? (
+          <Spinner animation="border" variant="light" />
+        ) : (
+          <div>
+            <Row sm={2}>
+              {data && data.sentimentScores ? (
+                <ThermometerGauge
+                  low={parseFloat(data.sentimentScores.low)}
+                  high={parseFloat(data.sentimentScores.high)}
+                  average={parseFloat(data.sentimentScores.average)}
+                />
+              ) : (
+                <div>No data available</div>
+              )}
+            </Row>
+            <Row sm={4} className="summary-scrollable">
+              {/* Display summary text with scroll */}
               <div className="summary-text">
                 {data ? data.summary : 'No data available'}
               </div>
-            )}
-          </Col>
-          <Col sm={4}>
-            {loading ? (
-              <Spinner animation="border" variant="light" />
-            ) : data && data.sentimentScores ? (
-              <ThermometerGauge
-                low={parseFloat(data.sentimentScores.low)}
-                high={parseFloat(data.sentimentScores.high)}
-                average={parseFloat(data.sentimentScores.average)}
-              />
-            ) : (
-              <div>No data available</div>
-            )}
-          </Col>
-        </Row>
+            </Row>
+          </div>
+        )}
       </Card.Body>
     </Card>
   );

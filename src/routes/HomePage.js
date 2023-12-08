@@ -12,7 +12,7 @@ const HomePage = () => {
     <div className="homepage-background">
       {/* Navbar */}
       <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="#home">RECOMNDR Unleashed! (ok, still partially leashed for now)</Navbar.Brand>
+        <Navbar.Brand href="#home">RECOMNDR</Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
