@@ -2,6 +2,9 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import AnimatedButton from '../tools/AnimatedButton';
 
+//const backendUrl = 'https://api-x0xg.onrender.com/api/auth/login';
+const backendUrl = 'http://localhost:8000/api/auth/login';
+
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,16 +14,13 @@ function LoginForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log('email', email);
-    const response = await fetch(
-      'https://api-x0xg.onrender.com/api/auth/login',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      }
-    );
+    const response = await fetch(backendUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
     const data = await response.json();
 
