@@ -30,7 +30,7 @@ const calculateSMA = (data, dataIndex, windowSize) => {
 const fetchLatestPrediction = async () => {
   try {
     const response = await fetch(
-      `https://api-x0xg.onrender.com/api/data/latest-prediction`
+      `http://localhost:8000/api/data/latest-prediction`
     );
     if (!response.ok) {
       throw new Error(`Network response was not ok`);
@@ -73,9 +73,9 @@ const StockChart = () => {
     };
 
     fetchPredictionData();
-    // const interval = setInterval(fetchPredictionData, 60000); // Update every minute
+    const interval = setInterval(fetchPredictionData, 60000); // Update every minute
 
-    // return () => clearInterval(interval);
+    return () => clearInterval(interval);
   }, []);
   // Calculate SMA for JDST and NUGT with a window size of 5 (adjust as needed)
   const smaWindowSize = 5;
