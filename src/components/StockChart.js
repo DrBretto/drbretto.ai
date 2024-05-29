@@ -65,7 +65,6 @@ const StockChart = () => {
     const fetchPredictionData = async () => {
       try {
         const predictionData = await fetchLatestPrediction();
-        console.log('Latest Prediction Data:', predictionData);
         setStockData(predictionData);
       } catch (error) {
         console.error('Error fetching and processing prediction data:', error);

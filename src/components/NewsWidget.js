@@ -13,7 +13,7 @@ const NewsWidget = ({ source, subject }) => {
         const lowerCaseSource = source.toLowerCase();
         const lowerCaseSubject = subject.toLowerCase();
         const response = await fetch(
-          `https://api-x0xg.onrender.com/api/sentiment/?subject=${encodeURIComponent(
+          `http://localhost:8000/api/sentiment/?subject=${encodeURIComponent(
             lowerCaseSubject
           )}&source=${encodeURIComponent(lowerCaseSource)}`
         );
@@ -21,7 +21,6 @@ const NewsWidget = ({ source, subject }) => {
           throw new Error('Network response was not ok');
         }
         const result = await response.json();
-        console.log('Fetched data:', result); // Log the fetched data
         setData(result);
       } catch (error) {
         console.error('Fetch error:', error);
@@ -32,7 +31,7 @@ const NewsWidget = ({ source, subject }) => {
     fetchData();
 
     // Set an interval to refresh the data every 15 minutes
-    const interval = setInterval(fetchData, 60 * 1000); // 15 minutes in milliseconds
+    const interval = setInterval(fetchData, 15 * 60 * 1000);
 
     // Clear the interval when the component unmounts
     return () => clearInterval(interval);

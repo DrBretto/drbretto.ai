@@ -10,6 +10,7 @@
     "axios": "^1.4.0",
     "boostrap": "^2.0.0",
     "bootstrap": "^5.3.0",
+    "file-saver": "^2.0.5",
     "framer-motion": "^10.12.17",
     "jwt-decode": "^4.0.0",
     "p5": "^1.6.0",
