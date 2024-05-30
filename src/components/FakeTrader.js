@@ -1,203 +1,182 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-const FakeTrader = ({ confidenceLevel, stock1Data, stock2Data }) => {
+const FakeTrader = ({ confidenceLevel }) => {
+  const [prices, setPrices] = useState({ stock1Price: 0, stock2Price: 0 });
   const [trader, setTrader] = useState({
     cash: 0,
     holdings: '',
     shares: 0,
-    lastTradePrice: 0,
+    purchasePrice: 0,
+    portfolioValue: 0,
     tradeHistory: [],
   });
 
-  const [prices, setPrices] = useState({
-    stock1Price: 0,
-    stock2Price: 0,
-  });
-
-  // Fetch current prices
   const fetchCurrentPrices = useCallback(async () => {
-    const fetchPriceForStock = async (symbol) => {
-      try {
-        console.log(`Fetching the latest price for ${symbol}...`);
-        const response = await fetch(
-          `http://localhost:8000/api/data/latest-price?symbol=${symbol}`
-        );
-        if (!response.ok) {
-          throw new Error(`Network response was not ok for ${symbol}`);
-        }
-        const data = await response.json();
-        console.log(`Latest price for ${symbol}: ${data.price}`);
-        return parseFloat(data.price);
-      } catch (error) {
-        console.error(`Error fetching current price for ${symbol}:`, error);
-        return 0;
-      }
-    };
-
     try {
-      const stock1Price = await fetchPriceForStock('JDST');
-      const stock2Price = await fetchPriceForStock('NUGT');
-      setPrices({ stock1Price, stock2Price });
-      return { stock1Price, stock2Price };
+      const response1 = await fetch(
+        'http://localhost:8000/api/data/latest-price?symbol=JDST'
+      );
+      const data1 = await response1.json();
+      const response2 = await fetch(
+        'http://localhost:8000/api/data/latest-price?symbol=NUGT'
+      );
+      const data2 = await response2.json();
+      setPrices({
+        stock1Price: parseFloat(data1.price) || 0,
+        stock2Price: parseFloat(data2.price) || 0,
+      });
     } catch (error) {
       console.error('Error fetching current prices:', error);
-      return { stock1Price: 0, stock2Price: 0 };
     }
   }, []);
 
-  // Save trader data to backend
   const saveTraderData = useCallback(async (traderData) => {
     try {
-      console.log('Saving trader data:', traderData);
-      const response = await fetch(
-        'http://localhost:8000/api/data/save-trader',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(traderData),
-        }
-      );
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      console.log('Trader data saved successfully');
+      await fetch('http://localhost:8000/api/data/save-trader', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(traderData),
+      });
     } catch (error) {
       console.error('Error saving trader data:', error);
     }
   }, []);
 
-  // Load saved trader data
-  useEffect(() => {
-    const initializeTrader = async () => {
-      try {
-        console.log('Loading saved trader data...');
-        const response = await fetch(
-          'http://localhost:8000/api/data/load-trader'
-        );
-        if (response.ok) {
-          const savedTrader = await response.json();
-          console.log('Loaded saved trader data:', savedTrader);
-          setTrader(savedTrader);
-        } else {
-          console.log('No saved trader data found. Initializing with $100...');
-          const { stock1Price, stock2Price } = await fetchCurrentPrices();
-          const initialStock = confidenceLevel.includes('JDST')
-            ? 'JDST'
-            : 'NUGT';
-          const initialPrice =
-            initialStock === 'JDST' ? stock1Price : stock2Price;
-          const initialShares = 100 / initialPrice;
-          const newTrader = {
-            cash: 0,
-            holdings: initialStock,
-            shares: initialShares,
-            lastTradePrice: initialPrice,
-            tradeHistory: [
-              {
-                stock: initialStock,
-                price: initialPrice,
-                date: new Date(),
-                cash: 0,
-                shares: initialShares,
-              },
-            ],
-          };
-          console.log('Initialized trader data:', newTrader);
-          setTrader(newTrader);
-          await saveTraderData(newTrader);
-        }
-      } catch (error) {
-        console.error('Error initializing trader:', error);
-      }
-    };
-
-    initializeTrader();
-  }, [confidenceLevel, fetchCurrentPrices, saveTraderData]);
-
-  const performTrade = useCallback(
-    (newStock, currentPrice) => {
-      console.log(
-        `Performing trade. New stock: ${newStock}, Current price: ${currentPrice}`
-      );
-      setTrader((prevTrader) => {
-        let newShares;
-        let newCash;
-        if (prevTrader.holdings !== '') {
-          newCash = prevTrader.shares * currentPrice;
-          newShares = newCash / currentPrice;
-        } else {
-          newShares = prevTrader.cash / currentPrice;
-          newCash = 0;
-        }
-
-        const tradeHistory = [
-          ...prevTrader.tradeHistory,
+  const initializeTrader = useCallback(
+    (initialStock, initialPrice) => {
+      const initialShares = 100 / initialPrice;
+      const initialTraderData = {
+        cash: 0,
+        holdings: initialStock,
+        shares: initialShares,
+        purchasePrice: initialPrice,
+        portfolioValue: 100,
+        tradeHistory: [
           {
-            stock: newStock,
-            price: currentPrice,
-            date: new Date(),
-            cash: newCash,
-            shares: newShares,
+            timestamp: new Date().toISOString(),
+            action: `Initialized with ${initialStock}`,
+            shares: initialShares,
+            purchasePrice: initialPrice,
           },
-        ];
-        const updatedTrader = {
-          ...prevTrader,
-          cash: newCash,
-          holdings: newStock,
-          shares: newShares,
-          lastTradePrice: currentPrice,
-          tradeHistory,
-        };
-        console.log('Updated trader data after trade:', updatedTrader);
-        saveTraderData(updatedTrader);
-
-        return updatedTrader;
-      });
+        ],
+      };
+      setTrader(initialTraderData);
+      saveTraderData(initialTraderData);
     },
     [saveTraderData]
   );
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchCurrentPrices();
-    }, 60000); // Update every minute
-
-    return () => clearInterval(interval);
-  }, [fetchCurrentPrices]);
-
-  useEffect(() => {
-    if (stock1Data.length > 0 && stock2Data.length > 0) {
-      const newStock = confidenceLevel.includes('JDST') ? 'JDST' : 'NUGT';
-      const currentPrice =
-        newStock === 'JDST'
-          ? stock1Data[stock1Data.length - 1]
-          : stock2Data[stock2Data.length - 1];
-      console.log(
-        `New recommendation: ${newStock}, Current price: ${currentPrice}`
+  const fetchTraderData = useCallback(async () => {
+    try {
+      const response = await fetch(
+        'http://localhost:8000/api/data/load-trader'
       );
-      if (trader.holdings !== newStock || trader.shares === 0) {
-        performTrade(newStock, currentPrice);
+      const data = await response.json();
+      if (data && data.holdings) {
+        setTrader(data);
       } else {
-        setTrader((prevTrader) => {
-          const updatedTrader = {
-            ...prevTrader,
-            cash: prevTrader.shares * currentPrice,
-            lastTradePrice: currentPrice,
-          };
-          console.log('Updated trader data without trade:', updatedTrader);
-          return updatedTrader;
-        });
+        const preferredStock = confidenceLevel.includes('JDST')
+          ? 'JDST'
+          : 'NUGT';
+        const initialPrice =
+          preferredStock === 'JDST' ? prices.stock1Price : prices.stock2Price;
+        if (initialPrice > 0) {
+          initializeTrader(preferredStock, initialPrice);
+        }
       }
+    } catch (error) {
+      console.error('Error loading trader data:', error);
     }
   }, [
     confidenceLevel,
-    stock1Data,
-    stock2Data,
-    performTrade,
+    prices.stock1Price,
+    prices.stock2Price,
+    initializeTrader,
+  ]);
+
+  useEffect(() => {
+    fetchCurrentPrices();
+    fetchTraderData();
+  }, [fetchCurrentPrices, fetchTraderData]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchCurrentPrices();
+      fetchTraderData();
+    }, 900000); // 15 minutes in milliseconds
+    return () => clearInterval(interval);
+  }, [fetchCurrentPrices, fetchTraderData]);
+
+  useEffect(() => {
+    if (trader.holdings && prices.stock1Price > 0 && prices.stock2Price > 0) {
+      const currentPrice =
+        trader.holdings === 'JDST' ? prices.stock1Price : prices.stock2Price;
+      const portfolioValue = trader.shares * currentPrice;
+      if (portfolioValue !== trader.portfolioValue) {
+        const newTradeEntry = {
+          timestamp: new Date().toISOString(),
+          action: `Updated portfolio value`,
+          shares: trader.shares,
+          purchasePrice: currentPrice,
+        };
+        const updatedTrader = {
+          ...trader,
+          portfolioValue,
+          tradeHistory: [...trader.tradeHistory, newTradeEntry],
+        };
+        setTrader(updatedTrader);
+        saveTraderData(updatedTrader);
+      }
+    }
+  }, [
+    trader,
+    prices,
+    trader.portfolioValue,
     trader.holdings,
     trader.shares,
+    saveTraderData,
+  ]);
+
+  useEffect(() => {
+    const recommendedStock = confidenceLevel.includes('JDST') ? 'JDST' : 'NUGT';
+    if (trader.holdings && trader.holdings !== recommendedStock) {
+      const currentPrice =
+        trader.holdings === 'JDST' ? prices.stock1Price : prices.stock2Price;
+      const cashFromSale = trader.shares * currentPrice;
+      const newPrice =
+        recommendedStock === 'JDST' ? prices.stock1Price : prices.stock2Price;
+      const newShares = cashFromSale / newPrice;
+
+      const newTraderData = {
+        cash: 0,
+        holdings: recommendedStock,
+        shares: newShares,
+        purchasePrice: newPrice,
+        portfolioValue: newShares * newPrice,
+        tradeHistory: [
+          ...trader.tradeHistory,
+          {
+            timestamp: new Date().toISOString(),
+            action: `Traded ${trader.holdings} for ${recommendedStock}`,
+            shares: newShares,
+            purchasePrice: newPrice,
+          },
+        ],
+      };
+
+      setTrader(newTraderData);
+      saveTraderData(newTraderData);
+    }
+  }, [
+    trader.tradeHistory,
+    confidenceLevel,
+    prices.stock1Price,
+    prices.stock2Price,
+    trader.holdings,
+    trader.shares,
+    saveTraderData,
   ]);
 
   return (
@@ -208,9 +187,23 @@ const FakeTrader = ({ confidenceLevel, stock1Data, stock2Data }) => {
         {prices.stock1Price.toFixed(2)}
       </p>
       <p>
-        Currently Holding: {trader.holdings} - {trader.shares.toFixed(2)} shares
+        Currently Holding: {trader.holdings} - {trader.shares.toFixed(6)} shares
       </p>
-      <p>Total Value: ${trader.cash.toFixed(2)}</p>
+      <p>Total Value: ${trader.portfolioValue.toFixed(2)}</p>
+      <h4>Trade History</h4>
+      {trader.tradeHistory && trader.tradeHistory.length > 0 && (
+        <p>
+          {trader.tradeHistory[trader.tradeHistory.length - 1].timestamp}:{' '}
+          {trader.tradeHistory[trader.tradeHistory.length - 1].action} -{' '}
+          {trader.tradeHistory[trader.tradeHistory.length - 1].shares.toFixed(
+            6
+          )}{' '}
+          shares at $
+          {trader.tradeHistory[
+            trader.tradeHistory.length - 1
+          ].purchasePrice.toFixed(2)}
+        </p>
+      )}
     </div>
   );
 };
